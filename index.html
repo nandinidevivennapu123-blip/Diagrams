@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hospital Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+    .container {
+      background: white;
+      padding: 20px;a
+      border-radius: 12px;
+      width: 600px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      grid-column: span 2;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #4CAF50;
+      color: white;
+    }
+    .delete-btn {
+      background: red;
+      color: white;
+      padding: 5px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background: darkred;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏥 Hospital Management</h1>
+    
+    <!-- Patient Form -->
+    <form id="patientForm">
+      <input type="text" id="name" placeholder="Patient Name" required>
+      <input type="number" id="age" placeholder="Age" required>
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+      <input type="text" id="issue" placeholder="Health Issue" required>
+      <input type="text" id="disease" placeholder="Diagnosed Disease" required>
+      <input type="text" id="doctor" placeholder="Doctor Assigned" required>
+      <button type="submit">Add Patient</button>
+    </form>
+
+    <!-- Patients Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Issue</th>
+          <th>Disease</th>
+          <th>Doctor</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="patientTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById("patientForm");
+    const table = document.getElementById("patientTable");
+
+    // Load saved patients from LocalStorage
+    let patients = JSON.parse(localStorage.getItem("patients")) || [];
+
+    // Save to LocalStorage
+    function savePatients() {
+      localStorage.setItem("patients", JSON.stringify(patients));
+    }
+
+    // Display Patients
+    function displayPatients() {
+      table.innerHTML = "";
+      patients.forEach((p, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.age}</td>
+          <td>${p.gender}</td>
+          <td>${p.issue}</td>
+          <td>${p.disease}</td>
+          <td>${p.doctor}</td>
+          <td><button class="delete-btn" onclick="deletePatient(${index})">Delete</button></td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    // Add Patient
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const newPatient = {
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value,
+        gender: document.getElementById("gender").value,
+        issue: document.getElementById("issue").value,
+        disease: document.getElementById("disease").value,
+        doctor: document.getElementById("doctor").value,
+      };
+      patients.push(newPatient);
+      savePatients();
+      displayPatients();
+      form.reset();
+    });
+
+    // Delete Patient
+    function deletePatient(index) {
+      patients.splice(index, 1);
+      savePatients();
+      displayPatients();
+    }
+
+    // Show patients on page load
+    displayPatients();
+  </script>
+</body>
+</html>sss
